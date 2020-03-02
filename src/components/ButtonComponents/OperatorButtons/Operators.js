@@ -1,16 +1,31 @@
-import React from "react";
+import React from 'react'
+import { operators } from '../../../utils/data'
+import OperatorButton from './OperatorButton'
+// import { numbers } from '../../../utils/data'
 
 //import any components needed
 
-//Import your array data to from the provided data file
-
-const Operators = () => {
-  // STEP 2 - add the imported data to state
+const Operators = props => {
   return (
     <div>
-      {/* STEP 3 - Use .map() to iterate over your array data and return a button
-       component matching the name on the provided file. Pass
-       it any props needed by the child component*/}
+      {operators.map(buttonOps => {
+        return (
+          <OperatorButton
+            key={
+              new Date().valueOf().toString(36) +
+              Math.random()
+                .toString(36)
+                .substr(2)
+            }
+            className='operator-button'
+            text={buttonOps.char}
+            value={buttonOps.value}
+            handleClick={props.handleClick}
+          />
+        )
+      })}
     </div>
-  );
-};
+  )
+}
+
+export default Operators
