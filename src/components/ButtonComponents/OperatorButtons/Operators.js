@@ -11,10 +11,16 @@ const Operators = props => {
       {operators.map(buttonOps => {
         return (
           <OperatorButton
+            key={
+              new Date().valueOf().toString(36) +
+              Math.random()
+                .toString(36)
+                .substr(2)
+            }
             className='operator-button'
             text={buttonOps.char}
-            value={buttonOps.char}
-            onButtonPress={props.handleClick}
+            value={buttonOps.value}
+            handleClick={props.handleClick}
           />
         )
       })}

@@ -5,11 +5,18 @@ import NumberButton from './NumberButton'
 //import any components needed
 
 const Numbers = props => {
+  console.log(props)
   return (
     <div>
       {numbers.map(buttonNums => {
         return (
           <NumberButton
+            key={
+              new Date().valueOf().toString(36) +
+              Math.random()
+                .toString(36)
+                .substr(2)
+            }
             className='number-buttons'
             text={buttonNums}
             value={buttonNums}

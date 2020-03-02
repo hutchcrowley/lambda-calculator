@@ -7,44 +7,51 @@ import Numbers from '../ButtonComponents/NumberButtons/Numbers'
 import Operators from '../ButtonComponents/OperatorButtons/Operators'
 
 const App = () => {
-  const [equation, setEquation] = useState('')
-  const [result, setResult] = useState('')
-
-  const handleClick = event => {
-    const pressedButton = event.target.value
-    console.log(pressedButton)
-    let question = pressedButton
-    setEquation(question)
-    if (pressedButton === 'C') {
-      clear()
-    } else if (
-      setEquation(pressedButton >= '0' && pressedButton <= '9') ||
-      setEquation(pressedButton === '.')
-    ) {
-      setEquation((question += pressedButton))
-    } else if (['+', '-', '*', '/', '%'].indexOf(pressedButton) !== -1) {
-      setEquation((question += '' + pressedButton + ''))
-    } else if (pressedButton === '=') {
-      try {
-        const evalResult = eval(equation).toString()
-        const answer = Number.isInteger(evalResult)
-          ? evalResult
-          : evalResult.toFixed(2)
-        setResult(answer)
-      } catch (error) {
-        console.log('Invalid Mathematical Equation', error)
-      }
-    } else {
-      console.log(equation)
-      question = question.trim()
-      question = question.substr(0, question.length - 1)
-      setEquation(question)
-    }
-  }
+  const [equation, setEquation] = useState([])
+  const [calculation, setCalculation] = useState(null)
+  const [operator, setOperator] = useState(null)
+  const [calculator, setCalculator] = useState(null)
+  const [result, setResult] = useState(null)
+  const [evalResult, setEvalResult] = useState(null)
 
   const clear = () => {
     setEquation('')
     setResult('')
+  }
+
+  const handleClick = event => {
+    const pressedButton = event.target.value
+    console.log(pressedButton)
+    if (pressedButton === 'C') {
+      clear()
+    } else if (
+      pressedButton >= '0' ||
+      pressedButton <= '9' ||
+      pressedButton === '.'
+    ) {
+      setEquation([...equation, pressedButton])
+    } else if (['+', '-', '*', '/', '%'].indexOf(pressedButton) !== -1) {
+      setEquation([...equation, '', pressedButton, ''])
+      setOperator(pressedButton)
+    } else setCalculation(evaluate())
+    console.log(calculation)
+  }
+
+  const evaluate = () => {
+    try {
+      const float = eval(calculation).toString()
+      const answer = Number.isInteger(float) ? float : float.toFixed(2)
+      console.log(answer)
+      setEvalResult(answer)
+    } catch (error) {
+      console.log('Invalid Mathematical Equation', error)
+    } finally {
+      const smallAnswer = evalResult.trim()
+      const finalResult = smallAnswer.substr(0, smallAnswer.length - 1)
+      setResult(finalResult)
+      console.log(result)
+    }
+    return result
   }
 
   console.log(equation)

@@ -9,10 +9,16 @@ const Specials = props => {
       {specials.map(buttonSpecs => {
         return (
           <SpecialButton
+            key={
+              new Date().valueOf().toString(36) +
+              Math.random()
+                .toString(36)
+                .substr(2)
+            }
             className='specical-button'
             text={buttonSpecs}
             value={buttonSpecs}
-            onButtonPress={props.handleClick}
+            handleClick={props.handleClick}
           />
         )
       })}
