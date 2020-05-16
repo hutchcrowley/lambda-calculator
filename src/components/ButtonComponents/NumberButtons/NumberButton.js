@@ -1,15 +1,11 @@
 import React from 'react'
 
-const NumberButton = props => {
-  return (
-    <button
-      value={props.value}
-      className='number-button'
-      onClick={props.handleClick}
-    >
-      {props.text}
-    </button>
-  )
+const NumberButton = ({ value, handleClick, text }) => {
+	return (
+		<button value={value} onClick={e => handleClick(e)} className='number-button' key={value}>
+			{text}
+		</button>
+	)
 }
 
 export default NumberButton

@@ -7,71 +7,115 @@ import Numbers from '../ButtonComponents/NumberButtons/Numbers'
 import Operators from '../ButtonComponents/OperatorButtons/Operators'
 
 const App = () => {
-  const [equation, setEquation] = useState([])
-  const [calculation, setCalculation] = useState(null)
-  const [operator, setOperator] = useState(null)
-  const [calculator, setCalculator] = useState(null)
-  const [result, setResult] = useState(null)
-  const [evalResult, setEvalResult] = useState(null)
+	const [ result, setResult ] = useState([])
+	const [ current, setCurrent ] = useState('')
 
-  const clear = () => {
-    setEquation('')
-    setResult('')
-  }
+	const clear = () => {
+		setResult('')
+	}
 
-  const handleClick = event => {
-    const pressedButton = event.target.value
-    console.log(pressedButton)
-    if (pressedButton === 'C') {
-      clear()
-    } else if (
-      pressedButton >= '0' ||
-      pressedButton <= '9' ||
-      pressedButton === '.'
-    ) {
-      setEquation([...equation, pressedButton])
-    } else if (['+', '-', '*', '/', '%'].indexOf(pressedButton) !== -1) {
-      setEquation([...equation, '', pressedButton, ''])
-      setOperator(pressedButton)
-    } else setCalculation(evaluate())
-    console.log(calculation)
-  }
+	function handleClick(e) {
+		e.preventDefault()
+		let s = e.target.value
+		setCurrent(s)
+		parseCalcInput(current)
+	}
 
-  const evaluate = () => {
-    try {
-      const float = eval(calculation).toString()
-      const answer = Number.isInteger(float) ? float : float.toFixed(2)
-      console.log(answer)
-      setEvalResult(answer)
-    } catch (error) {
-      console.log('Invalid Mathematical Equation', error)
-    } finally {
-      const smallAnswer = evalResult.trim()
-      const finalResult = smallAnswer.substr(0, smallAnswer.length - 1)
-      setResult(finalResult)
-      console.log(result)
-    }
-    return result
-  }
+	// Function to take input from button presses, parse it inot an array of numbers and operators
+	function parseCalcInput(s) {
+		let calculation = []
+		console.log('current variable in handleClick: ', current)
+		switch (current) {
+			case current === '':
+				console.log('currrent var in function: ', current)
+				setCurrent('ERROR: invalid entry')
+				calculation.toString(current)
+				setCurrent('')
+				setResult(current)
+				break
+			// case '^*/+-'.indexOf(current) > -1:
+			// 	console.log('currrent var in function: ', current)
+			// 	break
+			case current === '-':
+				setCurrent('-')
+				calculation.push(current)
+				setCurrent('')
+				setResult([ ...result, calculation ])
+				break
+			case current === '+':
+				setCurrent('+')
+				console.log('currrent var in function: ', current)
+				// temp += parseFloat(current.charAt(i))
+				// setCurrent(temp)
+				calculation.push(current)
+				setCurrent('')
+				setResult([ ...result, calculation ])
+				break
+			case current === 'C':
+				clear()
+				setResult([ ...result, calculation ])
+				break
+			case current === 'CE':
+				calculation.pop('')
+				setResult([ ...result, calculation ])
+				break
+			default:
+				setResult([ ...result, current ])
+		}
+	}
 
-  console.log(equation)
-  return (
-    <div className='grid-container'>
-      <div className='app-header-display'>
-        <Logo />
-        <Display equation={equation} result={result} />
-      </div>
-      <div className='specials-row'>
-        <Specials handleClick={handleClick} />
-      </div>
-      <div className='numbers-container'>
-        <Numbers handleClick={handleClick} />
-      </div>
-      <div className='operators-column'>
-        <Operators handleClick={handleClick} />
-      </div>
-    </div>
-  )
+	function calculate(calc) {
+		// Perform a calculation expressed as an array of operators and numbers
+
+		const ops = [
+			{ '^': (a, b) => Math.pow(a, b) },
+			{ '*': (a, b) => a * b, '/': (a, b) => a / b },
+			{
+				'+': (a, b) => a + b,
+				'-': (a, b) => a - b,
+			},
+		]
+		{
+			let newCalc = []
+			let currentOp = null
+			for (let i = 0; i < ops.length; i++) {
+				for (let j = 0; j < calc.length; j++) {
+					if (ops[i][calc[j]]) {
+						currentOp = ops[i[calc[j]]]
+					} else if (currentOp) {
+						newCalc = ([ newCalc.length - 1 ], calc[j])
+						currentOp = null
+					} else {
+						newCalc.push(calc[j])
+					}
+					console.log(newCalc)
+					newCalc = []
+				}
+				if (calc.length > 1) {
+					console.log('Error: unable to resolve calculation')
+					return calc
+				} else return calc[0]
+			}
+		}
+	}
+
+	return (
+		<div className='grid-container'>
+			<div className='app-header-display'>
+				<Logo />
+				<Display result={result} />
+			</div>
+			<div className='specials-row'>
+				<Specials handleClick={handleClick} />
+			</div>
+			<div className='numbers-container'>
+				<Numbers handleClick={handleClick} />
+			</div>
+			<div className='operators-column'>
+				<Operators handleClick={handleClick} />
+			</div>
+		</div>
+	)
 }
 
 export default App
